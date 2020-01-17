@@ -1,0 +1,14 @@
+{
+  "name": "1337AdBlock",
+  "version": "1.0",
+  "description": "My supercool adblocker",
+  "permissions": ["webRequest", "webRequestBlocking", "http://*/", "https://*/"],
+  "background": {
+        "scripts": ["background.js"],
+        "persistent": true
+  },
+  "browser_action": {
+    "default_popup": "popup.html"
+  },
+  "manifest_version": 2
+}

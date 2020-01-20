@@ -1,29 +1,31 @@
 "use strict"
-
-var rrr = new Map();
  
 window.onload = function () {
-        function updateLabel() {
-                const enabled = chrome.extension.getBackgroundPage().enabled;
-                // FIXME! Toggle the button label: Disabled <-> Enabled
-                document.getElementById('toggle_button').value = (enabled ? "Disable" : "Enable");
-        }
-        document.getElementById('toggle_button').onclick = function () {
-                let background = chrome.extension.getBackgroundPage();
-                background.enabled = !background.enabled;
-                updateLabel();
-        };
-        updateLabel();
-        
-        let d = document.getElementById('oaoao');
-        
-        while (d.childElementCount) {
-            d.removeChild(d.lastElementChild);
-        }
-        
-        for (let p of rrr) {
-            let q = document.createElement("p");
-            q.innerText = p[1] + " " + p[0];
-            d.append(q);
-        }
+    chrome.runtime.sendMessage({msgid: "adblocker1337_popupRequest"})
+
+    function updateLabel() {
+            const enabled = chrome.extension.getBackgroundPage().enabled;
+            document.getElementById('toggle_button').value = (enabled ? "Disable" : "Enable");
+            document.getElementById('stat').style.color = (enabled ? '#000' : '#999');
+    }
+    
+    document.getElementById('toggle_button').onclick = function () {
+            let background = chrome.extension.getBackgroundPage();
+            background.enabled = !background.enabled;
+            updateLabel();
+    };
+    
+    document.getElementById('stat_reset').onclick = function () {
+        chrome.runtime.sendMessage({msgid: "adblocker1337_popupStatReset"})
+    };
+    
+    updateLabel();
 }
+
+chrome.runtime.onMessage.addListener(function(request, sender) {
+        if (!request.msgid) return;
+                                     
+        if (request.msgid == 'adblocker1337_popupResponse') {
+            document.getElementById("stat").innerText = request.total;
+        }
+});
